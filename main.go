@@ -7,15 +7,15 @@ import (
 func main() {
 	i := 0
 	j := 0
-	char := []string{"C", "A", "Ш", "A", "P", "B", "O"}
+	char := []string{"С", "А", "Ш", "А", "Р", "В", "О"}
 
 	//fmt.Println(num)
 	for i < 6 {
-		fmt.Println("nilai i =", i)
+		fmt.Println("Nilai i =", i)
 		i++
 		if i == 5 {
 			for j < 11 {
-				fmt.Println("nilai j =", j)
+				fmt.Println("Nilai j =", j)
 				j++
 				if j == 5 {
 					printChar(char)
@@ -26,9 +26,14 @@ func main() {
 	}
 }
 
-func printChar(items []string) {
-	for _, item := range items {
-		fmt.Println(item)
+func printChar(char []string) {
+	x := 0
+	for _, s := range char {
+		r := []rune(s)[0]
+		fmt.Printf("character %U", r)
+		fmt.Println(" '", s, "' start at byte position", x)
+		x += 2
+
 	}
 }
 
