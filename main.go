@@ -2,63 +2,46 @@ package main
 
 import (
 	"fmt"
-	"strconv"
+	"os"
 )
+
+type TemanKelas struct {
+	Nama      string
+	Alamat    string
+	Pekerjaan string
+	Alasan    string
+}
 
 func main() {
 
-	var i int = 8
-	x := "%"
-	var j bool = true
-	k := 123.456
-	s := strconv.FormatFloat(k, 'f', -1, 64)
+	fmt.Println("Nama program:", os.Args[0])
+	fmt.Println("Argumen baris perintah:", os.Args[1])
+	// Data teman kelas
+	teman1 := TemanKelas{"Andi", "Jakarta", "Mahasiswa", "Mau belajar programming"}
+	teman2 := TemanKelas{"Budi", "Bandung", "Programmer", "Mau tingkatkan skill"}
+	teman3 := TemanKelas{"Cindy", "Surabaya", "Guru", "Butuh pengetahuan tambahan"}
 
-	numbase10 := 21
-	numbase8 := 25
-	numbase16 := "f"
-	numbase16_2 := "F 13"
-	ya := 'Я'
-	flo := 123.456000
-	floSe := 1.23456
-
-	/*	const (
-		c1 = iota
-		c2
-		c3
-	)		*/
-
-	fmt.Println(x)
-	fmt.Printf("tipe data i: %T \n", i)
-	fmt.Println(x, "\n", j)
-	fmt.Println("\u042F", "(ya)")
-	fmt.Printf("nilai base 10 : 21 adalah %d \n", numbase10)
-	fmt.Printf("nilai base 8 : 25 adalah %o \n", numbase8)
-	fmt.Printf("nilai base 16 : f adalah %x \n", numbase16)
-	fmt.Printf("nilai base 16 : F 13 adalah %x \n", numbase16_2)
-	fmt.Printf("unicode dari Я %U \n ", ya)
-	fmt.Println("unicode dari var k")
-	for _, c := range s {
-		fmt.Printf("%U ", c)
-	}
-	fmt.Printf("\n %f \n", flo)
-	fmt.Printf(" %e \n", floSe)
+	// Menampilkan data teman kelas
+	fmt.Println("Data Teman Kelas")
+	fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan", os.Args[2])
+	fmt.Printf("%s\t%s\t%s\t\t%s\n", teman1.Nama, teman1.Alamat, teman1.Pekerjaan, teman1.Alasan)
+	fmt.Printf("%s\t%s\t%s\t%s\n", teman2.Nama, teman2.Alamat, teman2.Pekerjaan, teman2.Alasan)
+	fmt.Printf("%s\t%s\t%s\t\t%s\n", teman3.Nama, teman3.Alamat, teman3.Pekerjaan, teman3.Alasan)
 
 }
 
 /*
-menampilkan nilai i : 21 fmt.Printf("%T \n", i)
-// contoh : fmt.Printf("%v \n", i)
+Buatlah sebuah service berupa CLI untuk menampilkan data teman-teman kalian dikelas.
+Contohnya, ketika kalian menjalankan perintah go run biodata.go
+maka data yang akan muncul adalah data teman kalian dengan absen no 1.
 
-menampilkan tipe data dari variabel i
-menampilkan tanda %
-menampilkan nilai boolean j : true
-menampilkan nilai boolean j : true
-menampilkan unicode russia : Я (ya)
-menampilkan nilai base 10 : 21
-menampilkan nilai base 8 :25
-menampilkan nilai base 16 : f
-menampilkan nilai base 16 : F 13
-menampilkan unicode karakter Я : U+042F var k float64 = 123.456;
-menampilkan float : 123.456000
-menampilkan float scientific : 1.234560E+02
+Data yang harus ditampilkan yaitu:
+
+	●Nama
+	●Alamat
+	●Pekerjaan
+	●Alasan memilih kelas Golang
+
+Gunakanlah struct dan function untuk menampilkan data tersebut.
+*Kalian bisa menggunakan os.Args untuk mendapatkan argument pada terminal.
 */
