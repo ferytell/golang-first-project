@@ -22,8 +22,8 @@ func main() {
 		{"Cindy", "Surabaya", "Guru", "Butuh pengetahuan tambahan"},
 	}
 	//teman1 := TemanKelas{"Andi", "Jakarta", "Mahasiswa", "Mau belajar programming"}
-	teman2 := TemanKelas{"Budi", "Bandung", "Programmer", "Mau tingkatkan skill"}
-	teman3 := TemanKelas{"Cindy", "Surabaya", "Guru", "Butuh pengetahuan tambahan"}
+	// teman2 := TemanKelas{"Budi", "Bandung", "Programmer", "Mau tingkatkan skill"}
+	// teman3 := TemanKelas{"Cindy", "Surabaya", "Guru", "Butuh pengetahuan tambahan"}
 
 	args := os.Args[1:]
 
@@ -35,15 +35,17 @@ func main() {
 		}
 
 		if num == 1 {
-			printPeople(teman, 1)
+			printPeople(teman, 0)
 			// fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan")
 			// fmt.Printf("%s\t%s\t\t%s\t%s\n", teman1.Nama, teman1.Alamat, teman1.Pekerjaan, teman1.Alasan)
 		} else if num == 2 {
-			fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan")
-			fmt.Printf("%s\t%s\t\t%s\t%s\n", teman2.Nama, teman2.Alamat, teman2.Pekerjaan, teman2.Alasan)
+			printPeople(teman, 1)
+			// fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan")
+			// fmt.Printf("%s\t%s\t\t%s\t%s\n", teman2.Nama, teman2.Alamat, teman2.Pekerjaan, teman2.Alasan)
 		} else if num == 3 {
-			fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan")
-			fmt.Printf("%s\t%s\t\t%s\t%s\n", teman3.Nama, teman3.Alamat, teman3.Pekerjaan, teman3.Alasan)
+			printPeople(teman, 2)
+			// fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan")
+			// fmt.Printf("%s\t%s\t\t%s\t%s\n", teman3.Nama, teman3.Alamat, teman3.Pekerjaan, teman3.Alasan)
 		} else {
 			fmt.Println("no data found, use other number")
 		}
@@ -56,7 +58,8 @@ func printPeople(teman []TemanKelas, index int) {
 		return
 	}
 	t := teman[index]
-	fmt.Printf("%q, %q, %q, %q\n", t.Nama, t.Alamat, t.Pekerjaan, t.Alasan)
+
+	fmt.Printf("{\nNama : %q\nAlamat : %q\nPekerjaan : %q\nAlasan : %q\n}", t.Nama, t.Alamat, t.Pekerjaan, t.Alasan)
 
 	// for _, t := range teman {
 	// 	fmt.Println("Nama\tAlamat\t\tPekerjaan\tAlasan")
