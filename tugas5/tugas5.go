@@ -1,4 +1,4 @@
-package goroutineacak
+package tugas5
 
 import (
 	"fmt"
