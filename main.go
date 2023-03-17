@@ -2,22 +2,53 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 func main() {
-	done1 := make(chan bool)
-	done2 := make(chan bool)
+	wg := sync.WaitGroup{}
+	wg.Add(2)
 
-	data1 := "bisa"
-	data2 := "coba"
+	data1 := []interface{}{"coba1", "coba2", "coba3"}
+	data2 := []interface{}{"bisa1", "bisa2", "bisa3"}
 
-	go Goroutine1(data1, done1)
-	go Goroutine2(data2, done2)
+	ch1 := make(chan interface{})
+	ch2 := make(chan interface{})
 
-	<-done1
-	<-done2
+	go func() {
+		for i := 0; i < 4; i++ {
+			ch1 <- fmt.Sprint(data1, i+1)
+		}
+		close(ch1)
+		wg.Done()
+	}()
 
-	fmt.Println("Both goroutines have finished")
+	go func() {
+		for i := 0; i < 4; i++ {
+			ch2 <- fmt.Sprint(data2, i+1)
+		}
+		close(ch2)
+		wg.Done()
+	}()
+
+	go func() {
+		for {
+			select {
+			case msg1, ok := <-ch1:
+				if !ok {
+					return
+				}
+				fmt.Println(msg1)
+			case msg2, ok := <-ch2:
+				if !ok {
+					return
+				}
+				fmt.Println(msg2)
+			}
+		}
+	}()
+
+	wg.Wait()
 }
 
 // package main
@@ -29,44 +60,39 @@ func main() {
 // 	"time"
 // )
 
-// var mutex = &sync.Mutex{}
-
-// func goroutine1(data interface{}, done chan bool) {
-// 	for i := 0; i < 4; i++ {
-// 		mutex.Lock()
-// 		fmt.Printf("GOROUTINE 1: data=%v, loop=%d\n", data, i+1)
-// 		mutex.Unlock()
-// 		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
-// 	}
-// 	done <- true
-// }
-
-// func goroutine2(data interface{}, done chan bool) {
-// 	for i := 0; i < 4; i++ {
-// 		mutex.Lock()
-// 		fmt.Printf("GOROUTINE 2: data=%v, loop=%d\n", data, i+1)
-// 		mutex.Unlock()
-// 		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
-// 	}
-// 	done <- true
-// }
-
 // func main() {
-// 	done1 := make(chan bool)
-// 	done2 := make(chan bool)
+// 	wg := sync.WaitGroup{}
+// 	wg.Add(2)
 
-// 	data1 := "hello"
-// 	data2 := 42
+// 	data1 := []interface{}{"coba1", "coba2", "coba3"}
+// 	data2 := []interface{}{"bisa1", "bisa2", "bisa3"}
 
-// 	go goroutine1(data1, done1)
-// 	go goroutine2(data2, done2)
+// 	mu1 := sync.Mutex{}
+// 	mu2 := sync.Mutex{}
 
-// 	<-done1
-// 	<-done2
+// 	go func() {
+// 		for i := 0; i < 4; i++ {
+// 			mu1.Lock()
+// 			for _, d := range data1 {
+// 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
+// 				fmt.Println(d, i+1)
+// 			}
+// 			mu1.Unlock()
+// 		}
+// 		wg.Done()
+// 	}()
 
-// 	fmt.Println("Both goroutines have finished")
+// 	go func() {
+// 		for i := 0; i < 4; i++ {
+// 			mu2.Lock()
+// 			for _, d := range data2 {
+// 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
+// 				fmt.Println(d, i+1)
+// 			}
+// 			mu2.Unlock()
+// 		}
+// 		wg.Done()
+// 	}()
+
+// 	wg.Wait()
 // }
-
-/*
-
- */
