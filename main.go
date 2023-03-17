@@ -36,12 +36,18 @@ func main() {
 			select {
 			case msg1, ok := <-ch1:
 				if !ok {
-					return
+					if len(ch2) == 0 {
+						return
+					}
+					continue
 				}
 				fmt.Println(msg1)
 			case msg2, ok := <-ch2:
 				if !ok {
-					return
+					if len(ch1) == 0 {
+						return
+					}
+					continue
 				}
 				fmt.Println(msg2)
 			}
