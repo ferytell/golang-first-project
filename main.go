@@ -3,108 +3,133 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
-var wg = sync.WaitGroup{}
-var mutex sync.Mutex
-
 func main() {
-	ch1 := make(chan interface{}, 20)
-
-	data1 := []interface{}{"coba1", "coba2", "coba3"}
-	data2 := []interface{}{"bisa1", "bisa2", "bisa3"}
-
-	// Create a goroutine that sends messages to channel
 	for i := 0; i < 4; i++ {
-		wg.Add(3)
-		go pleaseWork(i, ch1, data1)
-		go pleaseWork(i, ch1, data2)
-		go pleaseWorks(i, ch1, data1, data2)
+		func(j int) {
+			go async1(j)
+			go async2(j)
+		}(i)
 	}
+	// func() {
+	// 	for i := 0; i < 4; i++ {
+	// 		go async1(i + 1)
+	// 		go async2(i + 1)
+	// 	}
+	// }()
+	time.Sleep(2 * time.Second)
+	fmt.Println("space--------")
 
-	wg.Wait()
-	close(ch1)
-	// Receive messages from ch and print them to stdout
-
-	for item := range ch1 {
-		//mutex.Lock()
-		fmt.Println(item)
-		//mutex.Unlock()
+	var mx sync.Mutex
+	for i := 0; i < 4; i++ {
+		go func(j int) {
+			mx.Lock()
+			//mx.Unlock()
+			async1(j)
+			//mx.Lock()
+			async2(j)
+			mx.Unlock()
+			time.Sleep(time.Second)
+		}(i)
 	}
-
-	// for msg := range ch1 {
-	// 	//mutex.Lock()
-	// 	fmt.Println(msg)
-	// 	//mutex.Unlock()
-	// }
-	// for msg := range ch2 {
-	// 	//mutex.Lock()
-	// 	fmt.Println(msg)
-	// 	//mutex.Unlock()
-	// }
+	time.Sleep(2 * time.Second)
 
 }
 
-func pleaseWork(i int, ch chan<- interface{}, data []interface{}) {
-	defer wg.Done() // Signal that the goroutine has finished
-	mutex.Lock()
-	ch <- fmt.Sprint(data, i+1)
-	mutex.Unlock()
+func async1(i int) {
+	data := []interface{}{"coba1", "coba2", "coba3"}
+	fmt.Println(data, i)
 }
 
-func pleaseWorks(i int, ch chan<- interface{}, data1 []interface{}, data2 []interface{}) {
-	defer wg.Done() // Signal that the goroutine has finished
-	mutex.Lock()
-	if i%2 == 0 {
-		ch <- fmt.Sprint(data1, i/2+1)
-	} else {
-		ch <- fmt.Sprint(data2, i/2+1)
-	}
-	mutex.Unlock()
+func async2(i int) {
+	data := []interface{}{"bisa1", "bisa2", "bisa3"}
+	fmt.Println(data, i)
 }
 
 // package main
 
 // import (
 // 	"fmt"
-// 	"math/rand"
 // 	"sync"
-// 	"time"
 // )
 
+// var wg = sync.WaitGroup{}
+// var mutex sync.Mutex
+
 // func main() {
-// 	wg := sync.WaitGroup{}
-// 	wg.Add(2)
+// 	ch1 := make(chan interface{}, 20)
+// 	// ch2 := make(chan interface{}, 5)
+// 	// ch3 := make(chan interface{}, 5)
 
 // 	data1 := []interface{}{"coba1", "coba2", "coba3"}
 // 	data2 := []interface{}{"bisa1", "bisa2", "bisa3"}
 
-// 	mu1 := sync.Mutex{}
-// 	mu2 := sync.Mutex{}
+// 	// Create a goroutine that sends messages to channel
 
-// 	go func() {
-// 		for i := 0; i < 4; i++ {
-// 			mu1.Lock()
-// 			for _, d := range data1 {
-// 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-// 				fmt.Println(d, i+1)
-// 			}
-// 			mu1.Unlock()
-// 		}
-// 		wg.Done()
-// 	}()
+// 	for i := 0; i < 4; i++ {
+// 		go func(j int) {
+// 			wg.Add(2)
+// 			//mutex.Lock()
+// 			goroutineAcak(j, ch1, data1, &wg)
+// 			goroutineAcak(j, ch1, data2, &wg)
+// 			//mutex.Unlock()
 
-// 	go func() {
-// 		for i := 0; i < 4; i++ {
-// 			mu2.Lock()
-// 			for _, d := range data2 {
-// 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-// 				fmt.Println(d, i+1)
-// 			}
-// 			mu2.Unlock()
-// 		}
-// 		wg.Done()
-// 	}()
+// 		}(i)
+// 	}
+// 	//time.Sleep(1 * time.Second)
+// 	fmt.Println("space--------")
+
+// 	for i := 0; i < 4; i++ {
+// 		go func(j int) {
+// 			wg.Add(2)
+// 			//mutex.Lock()
+// 			goroutineRapi(j, ch1, data1, &wg)
+// 			goroutineRapi(j, ch1, data2, &wg)
+// 			//mutex.Unlock()
+
+// 		}(i)
+// 	}
 
 // 	wg.Wait()
+
+// 	close(ch1)
+// 	// Receive messages from ch and print them to stdout
+
+// 	// for i := 0; i < 4; i++ {
+// 	// 	go pleaseWorks(i, ch2, data1, data2)
+// 	// 	go pleaseWorks(i, ch3, data1, data2)
+
+// 	// }
+
+// 	for item := range ch1 {
+// 		//mutex.Lock()
+// 		fmt.Println(item)
+// 		//mutex.Unlock()
+// 	}
+
 // }
+
+// func goroutineAcak(i int, ch chan<- interface{}, data1 []interface{}, wg *sync.WaitGroup) {
+// 	ch <- fmt.Sprint(data1, i+1)
+// 	//wg.Done()
+// }
+
+// func goroutineRapi(i int, ch chan<- interface{}, data1 []interface{}, wg *sync.WaitGroup) {
+// 	mutex.Lock()
+// 	ch <- fmt.Sprint(data1, i+1)
+// 	mutex.Unlock()
+// 	wg.Done()
+// }
+
+// // func pleaseWorks(i int, ch chan<- interface{}, data1 []interface{}, data2 []interface{}) {
+// // 	defer wg.Done() // Signal that the goroutine has finished
+// // 	mutex.Lock()
+// // 	if i%2 == 0 {
+// // 		ch <- fmt.Sprint(data1, i/2+1)
+// // 	} else {
+// // 		ch <- fmt.Sprint(data2, i/2+1)
+// // 	}
+// // 	mutex.Unlock()
+// // }
